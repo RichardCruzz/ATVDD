@@ -1,10 +1,10 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import path from "path";
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const path = require("path");
 
-import categoriaRoutes from "./routes/categoria.routes.js";
-import produtoRoutes from "./routes/produto.routes.js";
+const categoriaRoutes = require("./routes/categoriaRoutes");
+const produtoRoutes = require("./routes/produtoRoutes");
 
 dotenv.config();
 
@@ -17,7 +17,5 @@ app.use('/uploads', express.static('uploads'));
 app.use('/categorias', categoriaRoutes);
 app.use('/produtos', produtoRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

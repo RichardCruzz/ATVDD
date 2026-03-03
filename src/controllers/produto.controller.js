@@ -2,6 +2,7 @@ const { produtoModel } = require("../models/produtoModel");
 const { categoriaModel } = require("../models/categoriaModel");
 
 const produtoController = {
+
     listarProdutos: async (req, res) => {
         try {
             const produtos = await produtoModel.buscarTodos();
@@ -16,7 +17,7 @@ const produtoController = {
         try {
             const { id } = req.params;
             const produto = await produtoModel.buscarPorId(id);
-            if (produto) return res.status(404).json({ message: "Produto não encontrado." });
+            if (!produto) return res.status(404).json({ message: "Produto não encontrado." });
             res.status(200).json(produto);
         } catch (error) {
             console.error("Erro ao selecionar produto:", error);
@@ -27,8 +28,7 @@ const produtoController = {
     criarProduto: async (req, res) => {
         try {
             const { nomeProduto, preco, categoriaId } = req.body;
-
-            if (nomeProduto || preco || categoriaId) {
+            if (!nomeProduto || !preco || !categoriaId) {
                 return res.status(400).json({ message: "Nome, preço e categoria são obrigatórios." });
             }
 
@@ -47,14 +47,16 @@ const produtoController = {
         try {
             const { id } = req.params;
             const { nomeProduto, preco, categoriaId } = req.body;
-
-            if (nomeProduto || preco  || categoriaId) {
+            if (!nomeProduto || !preco || !categoriaId) {
                 return res.status(400).json({ message: "Nome, preço e categoria são obrigatórios." });
             }
-            const categoria = await categoriaModel.buscarPorId(categoriaId);
-            if (categoria) return res.status(400).json({ message: "Categoria não encontrada." });
 
-            await produtoModel.atualizarProduto(id, nomeProduto, preco, categoriaId);
+            const categoria = await categoriaModel.buscarPorId(categoriaId);
+            if (!categoria) return res.status(400).json({ message: "Categoria não encontrada." });
+
+            const atualizado = await produtoModel.atualizarProduto(id, nomeProduto, preco, categoriaId);
+            if (!atualizado) return res.status(404).json({ message: "Produto não encontrado." });
+
             res.status(200).json({ message: "Produto atualizado com sucesso!", id, nomeProduto, preco, categoriaId });
         } catch (error) {
             console.error("Erro ao editar produto:", error);
@@ -65,7 +67,9 @@ const produtoController = {
     excluirProduto: async (req, res) => {
         try {
             const { id } = req.params;
-            await produtoModel.excluirProduto(id);
+            const excluido = await produtoModel.excluirProduto(id);
+            if (!excluido) return res.status(404).json({ message: "Produto não encontrado." });
+
             res.status(200).json({ message: "Produto excluído com sucesso!" });
         } catch (error) {
             console.error("Erro ao excluir produto:", error);

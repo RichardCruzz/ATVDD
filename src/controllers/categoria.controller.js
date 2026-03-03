@@ -1,14 +1,12 @@
 const { categoriaModel } = require("../models/categoriaModel");
 
 const categoriaController = {
-    
-    listarCategorias: async (req, res) => 
-        {
+
+    listarCategorias: async (req, res) => {
         try {
             const categorias = await categoriaModel.buscarTodas();
             res.status(200).json(categorias);
-        } catch (error) 
-        {
+        } catch (error) {
             console.error("Erro ao listar categorias:", error);
             res.status(500).json({ message: "Erro ao buscar categorias." });
         }
@@ -45,7 +43,9 @@ const categoriaController = {
             const { nomeCategoria } = req.body;
             if (!nomeCategoria) return res.status(400).json({ message: "Nome da categoria é obrigatório." });
 
-            await categoriaModel.atualizarCategoria(id, nomeCategoria);
+            const atualizado = await categoriaModel.atualizarCategoria(id, nomeCategoria);
+            if (!atualizado) return res.status(404).json({ message: "Categoria não encontrada." });
+
             res.status(200).json({ message: "Categoria atualizada com sucesso!", id, nomeCategoria });
         } catch (error) {
             console.error("Erro ao editar categoria:", error);
@@ -56,7 +56,9 @@ const categoriaController = {
     excluirCategoria: async (req, res) => {
         try {
             const { id } = req.params;
-            await categoriaModel.excluirCategoria(id);
+            const excluido = await categoriaModel.excluirCategoria(id);
+            if (!excluido) return res.status(404).json({ message: "Categoria não encontrada." });
+
             res.status(200).json({ message: "Categoria excluída com sucesso!" });
         } catch (error) {
             console.error("Erro ao excluir categoria:", error);
