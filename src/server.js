@@ -1,21 +1,20 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const path = require("path");
+import express from "express";
+import dotenv from "dotenv";
+import categoriaRoutes from "./routes/categoria.routes.js";
+import produtoRoutes from "./routes/produto.routes.js";
 
-const categoriaRoutes = require("./routes/categoriaRoutes");
-const produtoRoutes = require("./routes/produtoRoutes");
-
-dotenv.config();
+dotenv.config(); 
 
 const app = express();
 
-app.use(cors());
+ 
 app.use(express.json());
-app.use('/uploads', express.static('uploads'));
 
-app.use('/categorias', categoriaRoutes);
-app.use('/produtos', produtoRoutes);
+// Rotas
+app.use("/categorias", categoriaRoutes);
+app.use("/produtos", produtoRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});

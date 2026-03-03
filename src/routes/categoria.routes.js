@@ -1,5 +1,5 @@
-const { Router } = require("express");
-const { categoriaController } = require("../controllers/categoriaController");
+import { Router } from "express";
+import  categoriaControllers  from "../controllers/categoriaController.js";
 
 const categoriaRoutes = Router();
 
@@ -9,4 +9,4 @@ categoriaRoutes.post("/", categoriaController.criarCategoria);
 categoriaRoutes.put("/:id", categoriaController.editarCategoria);
 categoriaRoutes.delete("/:id", categoriaController.excluirCategoria);
 
-module.exports = categoriaRoutes;
+export default categoriaRoutes;
